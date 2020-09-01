@@ -3,17 +3,25 @@
 
 namespace app\test\controller;
 use app\model\Note as NoteModel;
+use think\Controller;
 use think\Db;
 
-class Note
+class Note extends Controller
 {
-    public function getnote ()
+    //获取所有贴子信息
+    public function getallnote ()
     {
-        return time();
-//        dump(time());
-//        $data = NoteModel::where('id',30)->find();
-//        return $data;
+        $data = NoteModel::json(['images'])->select();
+        return $data;
     }
+
+    //获取id贴子
+    public function getonenote ($id)
+    {
+        $data = NoteModel::json(['images'])->where('id',$id)->find();
+        return $data;
+    }
+
     //创建贴子
     public function createnote ()
     {
@@ -22,17 +30,22 @@ class Note
         $imgs = [];
         //接收图片地址的数组
         $files = request()->file('image');
+        //upload()上传图片函数
         $this->upload($files,$imgs);
         $data = [
             'cid'       =>      $info['cid'],
             'uid'       =>      $info['uid'],
             'content'   =>      $info['content'],
-            'images'    =>      ['imgs'=>$imgs],
+            'images'    =>      $imgs,
         ];
         $noteinfo = new NoteModel();
         $flag = $noteinfo->save($data);
         if($flag) {
-            return json((NoteModel::get($noteinfo->id)));
+            return json([
+                "error_code"     =>      0,
+                "msg"            =>      "发帖成功",
+                'data'           =>      $this->getonenote($noteinfo->id),
+            ]);
         }
         else {
             echo 'sas'."<hr/>";

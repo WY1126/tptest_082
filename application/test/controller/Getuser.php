@@ -80,7 +80,6 @@ class Getuser extends Controller
             'password'  =>      $pwd,
         ];
         $userinfo = UserModel::where($key)->find();
-//        return json($userinfo);
         if(!$userinfo)
         {
             return json([
