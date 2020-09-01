@@ -31,7 +31,7 @@ class Reply
         $flag = $reply->save($data);
         if($flag) {
             $return_data['error_code'] = 0;
-            $return_data['msg']        = '回复成功' ;
+            $return_data['msg']        = '回复成功！' ;
             $return_data['data']       = ReplyModel::get($reply->id);
             return json($return_data);
         }
