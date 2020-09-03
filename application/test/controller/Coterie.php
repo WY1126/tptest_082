@@ -4,6 +4,7 @@
 namespace app\test\controller;
 
 use app\model\Coterie as CoterieModel;
+use think\facade\Request;
 
 class Coterie
 {
@@ -71,4 +72,22 @@ class Coterie
             }
         }
     }
+
+    //获取我的圈子
+    public function getmycoterie ()
+    {
+        //获取uid 判断是否为空
+        $uid = Request::param('uid');
+        if($uid==null) {
+            return json([
+               'error_code'     =>      1,
+               'msg'            =>      'uid为空',
+            ]);
+        }
+
+        //搜索uid的圈子
+        $mycoterie = CoterieModel::where('uid',$uid)->select();
+        return json($mycoterie);
+    }
+
 }
