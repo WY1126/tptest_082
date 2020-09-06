@@ -5,6 +5,7 @@ namespace app\test\controller;
 
 use app\model\Coterie as CoterieModel;
 use think\facade\Request;
+use app\model\Joincoterie as JoincoterieModel;
 
 class Coterie
 {
@@ -88,6 +89,59 @@ class Coterie
         //搜索uid的圈子
         $mycoterie = CoterieModel::where('uid',$uid)->select();
         return json($mycoterie);
+    }
+
+    //用户加入圈子
+    public function joincoterie ()
+    {
+//        return 'join';
+        $info = $_POST;
+        $data = [
+            'coterie_id'        =>      $info['coterie_id'],
+            'user_id'           =>      $info['user_id'],
+        ];
+        //判断用户是加入圈子还是退出圈子···
+        $result = JoincoterieModel::where($data)->find();
+        $return_data = array();
+
+        if($result) {
+            //修改status 0->1 ,1->0
+            $result->status +=1;    $result->status %=2;
+            $flag = $result->save();
+            if($flag) {
+                if($result->status == 0) {
+                    $return_data['error_code'] = 0;
+                    $return_data['msg']        = '已退出圈子';
+                    $return_data['data']       = $result;
+                    return json($return_data);
+                }
+                else {
+                    $return_data['error_code'] = 1;
+                    $return_data['msg']        = '成功加入圈子';
+                    $return_data['data']       = $result;
+                    return json($return_data);
+                }
+            }
+            else {
+                $return_data['error_code'] = 2;
+                $return_data['msg']        = '错误';
+                return json($return_data);
+            }
+        }
+        //加入圈子
+        $join = new JoincoterieModel();
+        $flag = $join->save($data);
+        if($flag) {
+            $return_data['error_code'] = 1;
+            $return_data['msg']        = '成功加入圈子';
+            $return_data['data']       = $join;
+            return json($return_data);
+        }
+        else {
+            $return_data['error_code'] = 2;
+            $return_data['msg']        = '错误';
+            return json($return_data);
+        }
     }
 
 }

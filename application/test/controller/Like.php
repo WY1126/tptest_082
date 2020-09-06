@@ -91,7 +91,7 @@ class Like
      */
     public function dolike ($data)
     {
-        //根据status判断是对那张表点赞
+        //根据like_type判断是对那张表点赞
         if($data['like_type'] == 0)
             $temp = NoteModel::get($data['like_id']);
         if($data['like_type'] == 1)

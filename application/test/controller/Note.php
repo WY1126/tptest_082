@@ -41,10 +41,6 @@ class Note extends Controller
         $noteinfo = new NoteModel();
         $flag = $noteinfo->save($data);
         if($flag) {
-            //创建点赞表
-//            $like = new Like();
-//            $like->createlike(0,$noteinfo->id);
-
             return json([
                 "error_code"     =>      0,
                 "msg"            =>      "发帖成功",
