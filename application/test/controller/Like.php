@@ -11,6 +11,7 @@ use think\Model;
 
 class Like
 {
+    public $d=0;
 
     //创建点赞表
     public function createlike ($temp)
